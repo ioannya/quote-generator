@@ -6,7 +6,6 @@ DB_PATH = (
 )
 
 
-
 def get_connection() -> sqlite3.Connection:
     return sqlite3.connect(DB_PATH)
 
@@ -25,7 +24,8 @@ def init_db() -> None:
             """
         )
         cursor.execute(
-            "CREATE INDEX IF NOT EXISTS idx_quotes_category ON quotes(category);"
+            "CREATE INDEX IF NOT EXISTS idx_quotes_category "
+            "ON quotes(category);"
         )
         conn.commit()
         print(f"База данных инициализирована по пути: {DB_PATH}")
