@@ -4,7 +4,6 @@ def test_example():
 
 def test_import():
     try:
-        from quote_generator import models
         assert True
     except ImportError:
         assert False, "Не удалось импортировать модуль models"

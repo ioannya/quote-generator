@@ -51,7 +51,9 @@ def get_categories() -> list[str]:
     conn = get_connection()
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT DISTINCT category FROM quotes ORDER BY category;")
+        cursor.execute(
+            "SELECT DISTINCT category FROM quotes ORDER BY category;"
+        )
         rows = cursor.fetchall()
         return [row[0] for row in rows]
     except sqlite3.Error as e:

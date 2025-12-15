@@ -1,7 +1,10 @@
 import sqlite3
 from pathlib import Path
 
-DB_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "quotes.sqlite3"
+DB_PATH = (
+    Path(__file__).resolve().parent.parent.parent / "data" / "quotes.sqlite3"
+)
+
 
 
 def get_connection() -> sqlite3.Connection:
