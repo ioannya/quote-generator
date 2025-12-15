@@ -1,5 +1,7 @@
 import random
+import sqlite3
 from typing import Optional
+
 from .db import get_connection
 from .models import Quote
 

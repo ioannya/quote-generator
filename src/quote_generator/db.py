@@ -1,6 +1,5 @@
 import sqlite3
 from pathlib import Path
-from typing import Optional
 
 DB_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "quotes.sqlite3"
 
@@ -22,7 +21,9 @@ def init_db() -> None:
             );
             """
         )
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_quotes_category ON quotes(category);")
+        cursor.execute(
+            "CREATE INDEX IF NOT EXISTS idx_quotes_category ON quotes(category);"
+        )
         conn.commit()
         print(f"База данных инициализирована по пути: {DB_PATH}")
     except sqlite3.Error as e:
