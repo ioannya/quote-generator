@@ -18,7 +18,9 @@ def add_quote(text: str, category: str) -> QuoteEntity:
         conn.close()
 
 
-def fetch_random_quote(category: Optional[str] = None) -> Optional[QuoteEntity]:
+def fetch_random_quote(
+        category: Optional[str] = None,
+) -> Optional[QuoteEntity]:
     conn = get_connection()
     try:
         cursor = conn.cursor()
