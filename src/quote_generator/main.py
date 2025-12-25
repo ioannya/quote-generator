@@ -1,8 +1,7 @@
-# src/quote_generator/main.py
 from typing import Optional
 
 from .db import init_db
-from .quote_service import get_random_quote, insert_quote, get_categories
+from .quote_service import get_random_quote, create_quote, get_categories
 from .models import Quote
 
 
@@ -51,7 +50,7 @@ def main():
             text = input("Введите текст цитаты: ").strip()
             category = input("Введите категорию цитаты: ").strip()
             if text and category:
-                insert_quote(text, category)
+                create_quote(text, category)
                 print("Цитата успешно добавлена!\n")
             else:
                 print("Текст и категория не могут быть пустыми.\n")

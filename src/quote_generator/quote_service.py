@@ -1,63 +1,37 @@
-import random
-import sqlite3
 from typing import Optional
 
-from .db import get_connection
 from .models import Quote
+from . import repositories
+from .mapper import entity_to_domain
 
 
-def insert_quote(text: str, category: str) -> None:
-    conn = get_connection()
-    try:
-        cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO quotes (text, category) VALUES (?, ?)",
-            (text, category)
-        )
-        conn.commit()
-    except sqlite3.Error as e:
-        print(f"Ошибка при добавлении цитаты: {e}")
-        raise
-    finally:
-        conn.close()
+def normalize_category(category: str) -> str:
+    return category.strip().lower()
+
+
+def create_quote(text: str, category: str) -> Quote:
+    text = text.strip()
+    category = normalize_category(category)
+
+    if not text:
+        raise ValueError("Текст цитаты не должен быть пустым.")
+    if not category:
+        raise ValueError("Категория не должна быть пустой.")
+
+    entity = repositories.add_quote(text, category)
+    return entity_to_domain(entity)
 
 
 def get_random_quote(category: Optional[str] = None) -> Optional[Quote]:
-    conn = get_connection()
-    try:
-        cursor = conn.cursor()
-        if category:
-            cursor.execute(
-                "SELECT id, text, category FROM quotes WHERE category = ?;",
-                (category,)
-            )
-        else:
-            cursor.execute("SELECT id, text, category FROM quotes;")
+    if category is not None:
+        category = normalize_category(category)
 
-        rows = cursor.fetchall()
-        if not rows:
-            return None
-
-        row = random.choice(rows)
-        return Quote(id=row[0], text=row[1], category=row[2])
-    except sqlite3.Error as e:
-        print(f"Ошибка при получении цитаты: {e}")
+    entity = repositories.fetch_random_quote(category)
+    if entity is None:
         return None
-    finally:
-        conn.close()
+
+    return entity_to_domain(entity)
 
 
 def get_categories() -> list[str]:
-    conn = get_connection()
-    try:
-        cursor = conn.cursor()
-        cursor.execute(
-            "SELECT DISTINCT category FROM quotes ORDER BY category;"
-        )
-        rows = cursor.fetchall()
-        return [row[0] for row in rows]
-    except sqlite3.Error as e:
-        print(f"Ошибка при получении категорий: {e}")
-        return []
-    finally:
-        conn.close()
+    return repositories.list_categories()
